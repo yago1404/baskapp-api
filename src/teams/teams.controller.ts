@@ -1,6 +1,6 @@
 import {Body, Controller, Delete, Get, Param, Post, Put, Res} from '@nestjs/common';
 import {TeamsService} from "./teams.service";
-import {CustomResponse} from "../domain/models/custom_response/custom.response";
+import {CustomResponse} from "../shared/domain/models/custom.response";
 
 @Controller('teams')
 export class TeamsController {
