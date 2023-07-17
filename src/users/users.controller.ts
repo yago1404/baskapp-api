@@ -10,6 +10,9 @@ export class UsersController {
     @Post('/auth')
     async auth(@Res() res, @Body() body): Promise<any> {
         const { email, password } = body;
+        if (!email || !password) {
+            return res.status(400).json(new CustomResponse(400, 'Bad Request, enter with valid Email and Password'));
+        }
         let haveUser: boolean = await this.service.authenticate(email, password);
         if (haveUser) {
             const token: string = AuthUtil.generateJWT();
