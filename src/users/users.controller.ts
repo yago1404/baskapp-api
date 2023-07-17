@@ -1,5 +1,5 @@
 import {Body, Controller, Post, Res} from '@nestjs/common';
-import {CustomResponse} from "../shared/domain/models/custom.response";
+import {CustomResponse} from "../shared/domain/models/custom_response/custom.response";
 import {UsersService} from "./users.service";
 import {AuthUtil} from "../shared/utils/auth.util";
 
