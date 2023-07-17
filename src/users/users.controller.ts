@@ -4,6 +4,7 @@ import {UsersService} from "./users.service";
 import {AuthUtil} from "../shared/utils/auth.util";
 import {CreateUserDto} from "../shared/domain/models/dtos/createUser.dto";
 import {CreateUserDtoPipe} from "../shared/infra/pipes/createUserDto.pipe";
+import {UserEntity} from "../shared/infra/entities/user.entity";
 
 @Controller('users')
 export class UsersController {
@@ -30,8 +31,8 @@ export class UsersController {
     @UsePipes(new CreateUserDtoPipe())
     async create(@Res() res, @Body() newUser: CreateUserDto): Promise<Response> {
         try {
-            await this.service.createUser(newUser);
-            return res.status(200).json(new CustomResponse(200, 'Success', { token: 'ASDADJDAKJNSKAD', refreshToken: 'asdasdasd', newUser}));
+            const user: UserEntity = await this.service.createUser(newUser);
+            return res.status(200).json(new CustomResponse(200, 'Success', { token: 'ASDADJDAKJNSKAD', refreshToken: 'asdasdasd', user}));
         } catch (e) {
             return res.status(500).json(new CustomResponse(500, 'Internal Server Error'));
         }

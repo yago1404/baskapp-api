@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {CreateUserDto} from "../shared/domain/models/dtos/createUser.dto";
-import {Repository} from "typeorm";
 import {UserEntity} from "../shared/infra/entities/user.entity";
 import {InjectRepository} from "@nestjs/typeorm";
+import {Repository} from "typeorm";
 
 const  users : {email: string, password: string}[] = [ {email: 'ytaveiros@gmail.com', 'password': '123456'} ];
 
@@ -16,6 +16,7 @@ export class UsersService {
     }
 
     async createUser(newUser: CreateUserDto): Promise<UserEntity>{
-        return this.repository.create(newUser);
+        const userEntity: UserEntity = this.repository.create(newUser);
+        return await this.repository.save(userEntity);
     }
 }
