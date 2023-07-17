@@ -4,15 +4,18 @@ import { AppService } from './app.service';
 import { TeamsModule } from './teams/teams.module';
 import { UsersModule } from './users/users.module';
 import {TypeOrmModule} from "@nestjs/typeorm";
+import {config} from 'dotenv';
+
+config();
 
 @Module({
   imports: [TeamsModule, UsersModule, TypeOrmModule.forRoot({
     "type": "postgres",
-    "host": "localhost",
-    "port": 5432,
-    "username": "postgres",
-    "password": "yago1404",
-    "database": "baskapp",
+    "host": process.env.DB_HOST,
+    "port": parseInt(process.env.DB_PROT),
+    "username": process.env.DB_USERNAME,
+    "password": process.env.DB_PASSWORD,
+    "database": process.env.DB_NAME,
     "entities": ["dist/**/*.entity{.ts,.js}"],
     "synchronize": true
   })],
