@@ -24,5 +24,8 @@ export class UserEntity {
     wingspan: number;
 
     @Column()
+    rule: number;
+
+    @Column()
     birthday: Date;
 }

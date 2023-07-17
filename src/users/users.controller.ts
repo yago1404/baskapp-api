@@ -1,14 +1,16 @@
-import {Body, Controller, Post, Res} from '@nestjs/common';
+import {Body, Controller, InternalServerErrorException, Param, Post, Res, UsePipes} from '@nestjs/common';
 import {CustomResponse} from "../shared/domain/models/custom_response/custom.response";
 import {UsersService} from "./users.service";
 import {AuthUtil} from "../shared/utils/auth.util";
+import {CreateUserDto} from "../shared/domain/models/dtos/createUser.dto";
+import {CreateUserDtoPipe} from "../shared/infra/pipes/createUserDto.pipe";
 
 @Controller('users')
 export class UsersController {
     constructor(private service: UsersService) {}
 
     @Post('/auth')
-    async auth(@Res() res, @Body() body): Promise<any> {
+    async auth(@Res() res, @Body() body): Promise<Response> {
         const { email, password } = body;
         if (!email || !password) {
             return res.status(400).json(new CustomResponse(400, 'Bad Request, enter with valid Email and Password'));
@@ -25,10 +27,13 @@ export class UsersController {
     }
 
     @Post()
-    async create(@Res() res, @Body() body): Promise<any> {
-        const { email, password } = body;
-        let haveUser: boolean = await this.service.authenticate(email, password);
-        if (haveUser) return res.status(200).json(new CustomResponse(200, 'Success', { token: 'ASDADJDAKJNSKAD', refreshToken: 'asdasdasd'}));
-        return res.status(404).json(new CustomResponse(404, 'Email ou senha inválidos'));
+    @UsePipes(new CreateUserDtoPipe())
+    async create(@Res() res, @Body() newUser: CreateUserDto): Promise<Response> {
+        try {
+            await this.service.createUser(newUser);
+            return res.status(200).json(new CustomResponse(200, 'Success', { token: 'ASDADJDAKJNSKAD', refreshToken: 'asdasdasd', newUser}));
+        } catch (e) {
+            return res.status(500).json(new CustomResponse(500, 'Internal Server Error'));
+        }
     }
 }
