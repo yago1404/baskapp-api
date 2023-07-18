@@ -1,5 +1,5 @@
 export abstract class AuthUtil {
-    static generateJWT(): string {
-        return 'ASDASDADSADADASDSADADADADSAASADAASDADADSADSASDADADADADADASDASDA';
-    }
+  static generateJWT(): string {
+    return 'ASDASDADSADADASDSADADADADSAASADAASDADADSADSASDADADADADADASDASDA';
+  }
 }

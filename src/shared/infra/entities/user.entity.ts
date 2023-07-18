@@ -1,31 +1,31 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('User')
 export class UserEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column()
-    email: string;
+  @Column()
+  email: string;
 
-    @Column()
-    password: string;
+  @Column()
+  password: string;
 
-    @Column()
-    height: number;
+  @Column()
+  height: number;
 
-    @Column()
-    weight: number;
+  @Column()
+  weight: number;
 
-    @Column()
-    wingspan: number;
+  @Column()
+  wingspan: number;
 
-    @Column()
-    rule: number;
+  @Column()
+  rule: number;
 
-    @Column()
-    birthday: Date;
+  @Column()
+  birthday: Date;
 }
