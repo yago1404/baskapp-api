@@ -28,4 +28,7 @@ export class UserEntity {
 
   @Column()
   birthday: Date;
+
+  @Column({ nullable: true })
+  lastRefreshToken: string;
 }
