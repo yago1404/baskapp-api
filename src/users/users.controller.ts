@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res, UsePipes } from '@nestjs/common';
+import { Body, ConflictException, Controller, Post, Res, UsePipes } from "@nestjs/common";
 import { CustomResponse } from '../shared/domain/models/custom_response/custom.response';
 import { UsersService } from './users.service';
 import { AuthUtil } from '../shared/utils/auth.util';
@@ -52,7 +52,9 @@ export class UsersController {
         }),
       );
     } catch (e) {
-      console.log(e);
+      if (e instanceof ConflictException) {
+        return res.status(409).json(new CustomResponse(409, e.message));
+      }
       return res
         .status(500)
         .json(new CustomResponse(500, 'Internal Server Error'));

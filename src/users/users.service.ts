@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from "@nestjs/common";
 import { CreateUserDto } from '../shared/domain/models/dtos/createUser.dto';
 import { UserEntity } from '../shared/infra/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,6 +18,13 @@ export class UsersService {
   }
 
   async createUser(newUser: CreateUserDto): Promise<UserEntity> {
+    const previousUser: UserEntity = await this.repository.findOneBy({
+      email: newUser.email,
+    });
+    if (previousUser) {
+      throw new ConflictException('Usuário ja possui cadastro');
+    }
+
     const userEntity: UserEntity = this.repository.create(newUser);
     return await this.repository.save(userEntity);
   }
