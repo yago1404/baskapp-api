@@ -44,6 +44,7 @@ export class UsersController {
     try {
       const user: UserEntity = await this.service.createUser(newUser);
       const { jwt, refreshToken } = AuthUtil.generateJWT(user);
+      await this.service.updateRefreshToken(user, refreshToken);
       return res.status(200).json(
         new CustomResponse(200, 'Success', {
           token: jwt,

@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from '../shared/domain/models/dtos/createUser.dto';
 import { UserEntity } from '../shared/infra/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -27,5 +27,13 @@ export class UsersService {
 
     const userEntity: UserEntity = this.repository.create(newUser);
     return await this.repository.save(userEntity);
+  }
+
+  async updateRefreshToken(
+    user: UserEntity,
+    refreshToken: string,
+  ): Promise<void> {
+    user['lastRefreshToken'] = refreshToken;
+    await this.repository.save(user);
   }
 }

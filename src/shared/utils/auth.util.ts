@@ -9,12 +9,21 @@ export abstract class AuthUtil {
     jwt: string;
     refreshToken: string;
   } {
+    function generateRefreshToken(): string {
+      let token = '';
+      for (let i = 0; i < 12; i++) {
+        token += (Math.random() * 32).toString(36);
+      }
+      return token;
+    }
+
     const payload = {
       userId: user.id,
       username: user.name,
     };
 
     const token = jwt.sign(payload, process.env.SECRET_KEY);
-    return { jwt: token, refreshToken: '' };
+    const refreshToken: string = generateRefreshToken();
+    return { jwt: token, refreshToken };
   }
 }
