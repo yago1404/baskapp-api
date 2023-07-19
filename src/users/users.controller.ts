@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  InternalServerErrorException,
-  Param,
-  Post,
-  Res,
-  UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, Post, Res, UsePipes } from '@nestjs/common';
 import { CustomResponse } from '../shared/domain/models/custom_response/custom.response';
 import { UsersService } from './users.service';
 import { AuthUtil } from '../shared/utils/auth.util';
@@ -31,13 +23,13 @@ export class UsersController {
           ),
         );
     }
-    const haveUser: boolean = await this.service.authenticate(email, password);
-    if (haveUser) {
-      const token: string = AuthUtil.generateJWT();
+    const user: UserEntity = await this.service.authenticate(email, password);
+    if (user) {
+      const { jwt, refreshToken }: any = AuthUtil.generateJWT(user);
       return res.status(200).json(
         new CustomResponse(200, 'Success', {
-          token: token,
-          refreshToken: 'asdasdasd',
+          token: jwt,
+          refreshToken: refreshToken,
         }),
       );
     }
@@ -51,14 +43,16 @@ export class UsersController {
   async create(@Res() res, @Body() newUser: CreateUserDto): Promise<Response> {
     try {
       const user: UserEntity = await this.service.createUser(newUser);
+      const { jwt, refreshToken } = AuthUtil.generateJWT(user);
       return res.status(200).json(
         new CustomResponse(200, 'Success', {
-          token: 'ASDADJDAKJNSKAD',
-          refreshToken: 'asdasdasd',
+          token: jwt,
+          refreshToken: refreshToken,
           user,
         }),
       );
     } catch (e) {
+      console.log(e);
       return res
         .status(500)
         .json(new CustomResponse(500, 'Internal Server Error'));
