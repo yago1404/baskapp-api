@@ -1,4 +1,11 @@
-import { Body, ConflictException, Controller, Post, Res, UsePipes } from "@nestjs/common";
+import {
+  Body,
+  ConflictException,
+  Controller,
+  Post,
+  Res,
+  UsePipes,
+} from '@nestjs/common';
 import { CustomResponse } from '../shared/domain/models/custom_response/custom.response';
 import { UsersService } from './users.service';
 import { AuthUtil } from '../shared/utils/auth.util';
