@@ -10,8 +10,9 @@ import { CustomResponse } from '../shared/domain/models/custom_response/custom.r
 import { UsersService } from './users.service';
 import { AuthUtil } from '../shared/utils/auth.util';
 import { CreateUserDto } from '../shared/domain/models/dtos/createUser.dto';
-import { CreateUserDtoPipe } from '../shared/infra/pipes/createUserDto.pipe';
+import { CreatePlayerDtoPipe } from '../shared/infra/pipes/createPlayerDtoPipe';
 import { UserEntity } from '../shared/infra/entities/user.entity';
+import {CreateCoachDtoPipe} from "../shared/infra/pipes/createCoachDtoPipe";
 
 @Controller('users')
 export class UsersController {
@@ -45,8 +46,34 @@ export class UsersController {
       .json(new CustomResponse(404, 'Email ou senha inválidos'));
   }
 
+  @Post('/coach')
+  @UsePipes(new CreateCoachDtoPipe())
+  async createCoach(@Res() res, @Body() newUser: CreateUserDto): Promise<CustomResponse> {
+    try {
+      const user: UserEntity = await this.service.createUser(newUser);
+      const { jwt, refreshToken } = AuthUtil.generateJWT(user);
+      await this.service.updateRefreshToken(user, refreshToken);
+      delete user.password;
+      delete user.lastRefreshToken;
+      return res.status(200).json(
+          new CustomResponse(200, 'Success', {
+            token: jwt,
+            refreshToken: refreshToken,
+            user,
+          }),
+      );
+    } catch (e) {
+      if (e instanceof ConflictException) {
+        return res.status(409).json(new CustomResponse(409, e.message));
+      }
+      return res
+          .status(500)
+          .json(new CustomResponse(500, 'Internal Server Error'));
+    }
+  }
+
   @Post()
-  @UsePipes(new CreateUserDtoPipe())
+  @UsePipes(new CreatePlayerDtoPipe())
   async create(@Res() res, @Body() newUser: CreateUserDto): Promise<Response> {
     try {
       const user: UserEntity = await this.service.createUser(newUser);

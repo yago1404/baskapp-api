@@ -14,13 +14,13 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @Column('decimal', { precision: 6, scale: 2 })
+  @Column('decimal', { precision: 6, scale: 2, nullable: true })
   height: number;
 
-  @Column('decimal', { precision: 6, scale: 2 })
+  @Column('decimal', { precision: 6, scale: 2, nullable: true })
   weight: number;
 
-  @Column('decimal', { precision: 6, scale: 2 })
+  @Column('decimal', { precision: 6, scale: 2, nullable: true })
   wingspan: number;
 
   @Column()

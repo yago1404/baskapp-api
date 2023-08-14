@@ -1,7 +1,7 @@
 import { BadRequestException, PipeTransform } from '@nestjs/common';
 import { CreateUserDto } from '../../domain/models/dtos/createUser.dto';
 
-export class CreateUserDtoPipe implements PipeTransform {
+export class CreatePlayerDtoPipe implements PipeTransform {
   transform(value: any): CreateUserDto {
     const { name, email, password, height, weight, wingspan, rule, birthday } =
       value;
