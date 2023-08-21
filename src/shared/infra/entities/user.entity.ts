@@ -1,5 +1,11 @@
-import {Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
-import {AddressEntity} from "./address.entity";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { AddressEntity } from './address.entity';
 
 @Entity('user')
 export class UserEntity {
