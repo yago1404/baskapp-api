@@ -2,6 +2,7 @@ import {
   Body,
   ConflictException,
   Controller,
+  Get,
   Post,
   Res,
   UsePipes,
@@ -99,5 +100,10 @@ export class UsersController {
         .status(500)
         .json(new CustomResponse(500, 'Internal Server Error'));
     }
+  }
+
+  @Get('/available-players')
+  async getAvailablePlayers(@Res() res): Promise<Response> {
+    return res.status(200).json(new CustomResponse(200, 'Success', {}));
   }
 }
