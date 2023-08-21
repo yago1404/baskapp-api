@@ -1,9 +1,9 @@
 export class CustomResponse {
   statusCode: number;
   message: string;
-  data?: {};
+  data?: object;
 
-  constructor(statusCode: number, message: string, data?: {}) {
+  constructor(statusCode: number, message: string, data?: object) {
     this.statusCode = statusCode;
     this.message = message;
     this.data = data;

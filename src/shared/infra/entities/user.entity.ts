@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { AddressEntity } from './address.entity';
 
 @Entity('user')
 export class UserEntity {
@@ -31,4 +38,11 @@ export class UserEntity {
 
   @Column({ nullable: true })
   lastRefreshToken: string;
+
+  @Column({ nullable: true })
+  photo: string;
+
+  @OneToOne(() => AddressEntity)
+  @JoinColumn()
+  address: AddressEntity;
 }
