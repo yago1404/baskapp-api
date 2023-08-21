@@ -36,7 +36,7 @@ export class UserEntity {
   @Column()
   birthday: Date;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, name: 'last_refresh_token' })
   lastRefreshToken: string;
 
   @Column({ nullable: true })
