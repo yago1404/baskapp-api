@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TeamsModule } from './teams/teams.module';
-import { UsersModule } from './users/users.module';
+import { TeamsModule } from './features/teams/teams.module';
+import { UsersModule } from './features/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from 'dotenv';
 

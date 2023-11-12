@@ -7,20 +7,21 @@ import {
   Res,
   UsePipes,
 } from '@nestjs/common';
-import { CustomResponse } from '../shared/domain/models/custom_response/custom.response';
+import { CustomResponse } from '../../shared/domain/models/custom_response/custom.response';
 import { UsersService } from './users.service';
-import { AuthUtil } from '../shared/utils/auth.util';
-import { CreateUserDto } from '../shared/domain/models/dtos/createUser.dto';
-import { CreatePlayerDtoPipe } from '../shared/infra/pipes/createPlayerDtoPipe';
-import { UserEntity } from '../shared/infra/entities/user.entity';
-import { CreateCoachDtoPipe } from '../shared/infra/pipes/createCoachDtoPipe';
+import { AuthUtil } from '../../shared/utils/auth.util';
+import { CreateUserDto } from '../../shared/domain/models/dtos/createUser.dto';
+import { CreatePlayerDtoPipe } from '../../shared/infra/pipes/createPlayerDtoPipe';
+import { UserEntity } from '../../shared/infra/entities/user.entity';
+import { CreateCoachDtoPipe } from '../../shared/infra/pipes/createCoachDtoPipe';
+import { Response } from 'express';
 
 @Controller('users')
 export class UsersController {
   constructor(private service: UsersService) {}
 
   @Post('/auth')
-  async auth(@Res() res, @Body() body): Promise<Response> {
+  async auth(@Res() res: Response, @Body() body): Promise<Response> {
     const { email, password } = body;
     if (!email || !password) {
       return res
@@ -50,9 +51,9 @@ export class UsersController {
   @Post('/coach')
   @UsePipes(new CreateCoachDtoPipe())
   async createCoach(
-    @Res() res,
+    @Res() res: Response,
     @Body() newUser: CreateUserDto,
-  ): Promise<CustomResponse> {
+  ): Promise<Response> {
     try {
       const user: UserEntity = await this.service.createUser(newUser);
       const { jwt, refreshToken } = AuthUtil.generateJWT(user);
@@ -78,7 +79,10 @@ export class UsersController {
 
   @Post()
   @UsePipes(new CreatePlayerDtoPipe())
-  async create(@Res() res, @Body() newUser: CreateUserDto): Promise<Response> {
+  async create(
+    @Res() res: Response,
+    @Body() newUser: CreateUserDto,
+  ): Promise<Response> {
     try {
       const user: UserEntity = await this.service.createUser(newUser);
       const { jwt, refreshToken } = AuthUtil.generateJWT(user);
@@ -103,7 +107,7 @@ export class UsersController {
   }
 
   @Get('/available-players')
-  async getAvailablePlayers(@Res() res): Promise<Response> {
+  async getAvailablePlayers(@Res() res: Response): Promise<Response> {
     return res.status(200).json(new CustomResponse(200, 'Success', {}));
   }
 }
