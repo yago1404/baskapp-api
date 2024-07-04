@@ -1,14 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { LoggedDto } from './dtos/logged.dto';
 import * as jwt from 'jsonwebtoken';
 import { LoginDto } from './dtos/login.dto';
+import { AppUserEntity } from '../../shared/entities/app-user.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class AuthService {
+  constructor(
+    @InjectRepository(AppUserEntity)
+    private appUserRepository: Repository<AppUserEntity>,
+  ) {}
+
   async doLogin(loginDto: LoginDto): Promise<LoggedDto> {
+    const user: AppUserEntity = await this.appUserRepository.findOneBy({
+      email: loginDto.email,
+      password: loginDto.password,
+    });
+    if (!user) {
+      throw new NotFoundException('Email ou senha inválidos');
+    }
     const token: string = this.generateToken('asdasd-asdsad-asdsa-asda');
     const refreshToken: string = this.generateRefreshToken();
-    return new LoggedDto(token, refreshToken);
+
+    user.refreshToken = refreshToken;
+    await this.appUserRepository.save(user);
+
+    const cleanedUser: AppUserEntity = this.clearUser(user);
+    return new LoggedDto(token, refreshToken, cleanedUser);
   }
 
   private generateRefreshToken(): string {
@@ -26,5 +46,13 @@ export class AuthService {
 
   private generateToken(id: string): string {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '20m' });
+  }
+
+  private clearUser(user: AppUserEntity): AppUserEntity {
+    delete user.password;
+    delete user.role;
+    delete user.refreshToken;
+
+    return user;
   }
 }
