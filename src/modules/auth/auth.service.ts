@@ -21,7 +21,7 @@ export class AuthService {
     if (!user) {
       throw new NotFoundException('Email ou senha inválidos');
     }
-    const token: string = this.generateToken('asdasd-asdsad-asdsa-asda');
+    const token: string = this.generateToken(user.id);
     const refreshToken: string = this.generateRefreshToken();
 
     user.refreshToken = refreshToken;
